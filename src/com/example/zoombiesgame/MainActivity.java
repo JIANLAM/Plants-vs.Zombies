@@ -14,6 +14,8 @@ import android.view.Menu;
 public class MainActivity extends Activity {
 
  /*
+ *  this  project is add to GitHub
+     let us updata  this game
  */
 	private CCDirector director;
 

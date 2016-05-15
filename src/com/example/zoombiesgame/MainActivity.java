@@ -13,6 +13,8 @@ import android.view.Menu;
 
 public class MainActivity extends Activity {
 
+ /*
+ */
 	private CCDirector director;
 
 	@Override

@@ -14,7 +14,7 @@ import android.view.Menu;
 public class MainActivity extends Activity {
 
        //add  the function about sunflower
-
+       //在dev上的修改
 	private CCDirector director;
 
 	@Override

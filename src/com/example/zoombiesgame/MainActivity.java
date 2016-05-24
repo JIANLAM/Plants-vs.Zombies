@@ -13,11 +13,8 @@ import android.view.Menu;
 
 public class MainActivity extends Activity {
 
- /*
- *  this  project is add to GitHub
-     let us updata  this game
-	 this is a sunflower changes
- */
+       //add  the function about sunflower
+
 	private CCDirector director;
 
 	@Override

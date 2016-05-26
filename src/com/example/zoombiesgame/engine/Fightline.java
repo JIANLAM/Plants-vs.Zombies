@@ -25,6 +25,7 @@ import com.example.zoombiesgame.base.Zombies;
 		
 public class Fightline {
 
+	private List<Zombies> zoombies=new ArrayList<Zombies>();
 	private List<AttackPlant> attackPlants=new ArrayList<AttackPlant>();
 	 private int line;
 	
@@ -47,7 +48,7 @@ public class Fightline {
 				 this, 0.2f, false);
 	}
 	 
-	 private List<Zombies> zoombies=new ArrayList<Zombies>();
+	 
 	 
 	 
 	 
@@ -90,6 +91,7 @@ public class Fightline {
 				
 				attackPlants.add((AttackPlant)plant);
 			}
+			
 			plant.setDieListener(new DieListener() {
 				
 				public void die() {
@@ -137,7 +139,8 @@ public class Fightline {
 								
 								  //½©Ê¬¿ÛÑª
 								zoombie.attacked(bullet.getAttack());
-								bullet.removeSelf();
+								bullet.setVisible(false);
+								bullet.setAttack(0);
 							}
 						}
 					 }

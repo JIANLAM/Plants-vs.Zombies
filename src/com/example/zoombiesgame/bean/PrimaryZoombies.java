@@ -73,7 +73,7 @@ public class PrimaryZoombies extends Zombies {
 		
 	    //Ö²Îï±»¹¥»÷
 		targePlant.attacked(attack);
-		if(targePlant.getLife()<=0){
+		if(targePlant.getLife()<0){
 		 	targePlant=null;
 		 	  CCScheduler.sharedScheduler().unschedule("reduceLife",
         			  this);

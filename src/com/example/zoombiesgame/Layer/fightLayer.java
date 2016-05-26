@@ -221,7 +221,7 @@ public boolean ccTouchesBegan(MotionEvent event) {
 		    	    			ccp(70+selectedPlant.size()*53,255));
 		    	    	
 		    	    	CCSequence sequence=CCSequence.actions(moveTO,
-		    	    			CCCallFunc.action(this, "unlock"));
+								CCCallFunc.action(this, "unlock"));
 		    	    	plant.getPlant().runAction(sequence);
 		    	    	selectedPlant.add(plant);
 //		    	    	int size = selectedPlant.size();

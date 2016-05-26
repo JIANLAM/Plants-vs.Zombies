@@ -180,9 +180,7 @@ public class GameController {
 				     if(!lines.contains(row)){
 				    		lines.get(line).addPlant(beReadyToInstalled);
 							map.addChild(beReadyToInstalled);
-						 
-				    	 
-				     }
+					   }
 				
 					}
 				beReadyToInstalled=null;

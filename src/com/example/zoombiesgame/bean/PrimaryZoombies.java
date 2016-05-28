@@ -61,7 +61,7 @@ public class PrimaryZoombies extends Zombies {
             	  
             	  //植物的掉血
             	  CCScheduler.sharedScheduler().schedule("reduceLife",
-            			  this, 0.2f, false);
+            			  this, 0.5f, false);
         	  }
      
          
@@ -71,15 +71,18 @@ public class PrimaryZoombies extends Zombies {
 	//生命减少
 	public void reduceLife(float t){
 		
-	    //植物被攻击
-		targePlant.attacked(attack);
-		if(targePlant.getLife()<0){
-		 	targePlant=null;
-		 	  CCScheduler.sharedScheduler().unschedule("reduceLife",
-        			  this);
-		 	  stopAllActions();
-		 	  move();
-		 	  }
+		 
+			 //植物被攻击
+			targePlant.attacked(attack);
+			if(targePlant.getLife()<=0){
+			 	targePlant=null;
+			 	  CCScheduler.sharedScheduler().unschedule("reduceLife",
+	        			  this);
+			 	  stopAllActions();
+			 	  move();
+			    }
+		 
+	   
 		
 	}
 	public void attacked(int attack) {

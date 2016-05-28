@@ -14,6 +14,7 @@ import com.example.zoombiesgame.base.AttackPlant;
 import com.example.zoombiesgame.base.Bullet;
 import com.example.zoombiesgame.base.Plant;
 import com.example.zoombiesgame.base.Zombies;
+import com.example.zoombiesgame.bean.Sunflower;
 
 /**
  * 
@@ -26,7 +27,10 @@ import com.example.zoombiesgame.base.Zombies;
 public class Fightline {
 
 	private List<Zombies> zoombies=new ArrayList<Zombies>();
+	//攻击性植物集合
 	private List<AttackPlant> attackPlants=new ArrayList<AttackPlant>();
+	//生产性植物集合
+	private List<Sunflower> sunFlower=new ArrayList<Sunflower>();
 	 private int line;
 	
 	 // 管理每行添加的植物 Integer为行号
@@ -45,12 +49,24 @@ public class Fightline {
 				 this, 0.2f, false);
 		 //产生子弹
 		 CCScheduler.sharedScheduler().schedule("createBullet",
-				 this, 0.2f, false);
+				 this, 0.1f, false);
+		 
+		 //产生阳光
+		 CCScheduler.sharedScheduler().schedule("createSunshine",
+				 this, 10f, false);
 	}
 	 
 	 
 	 
-	 
+	 //产生阳光
+	   public void createSunshine(float t){
+ 
+		    for(Sunflower sunflower:sunFlower){
+		    	sunflower.create();
+		    
+		    	
+		    }
+	   }
 	 
 	  //产生子弹
 	 public void createBullet(float t){
@@ -62,6 +78,7 @@ public class Fightline {
 		
 		   
 	 }
+	 //添加僵尸
 	 public void addZoombies(final Zombies mZoombies){
 		 zoombies.add(mZoombies);
 		 mZoombies.setDieListener(new DieListener() {
@@ -92,13 +109,23 @@ public class Fightline {
 				attackPlants.add((AttackPlant)plant);
 			}
 			
+          if(plant instanceof Sunflower){
+				
+        	  sunFlower.add((Sunflower) plant);
+			}
+          
+           //设置死亡监听 从对应集合中除去
 			plant.setDieListener(new DieListener() {
 				
 				public void die() {
 					plants.remove(plant.getRow());
 					if(plant instanceof AttackPlant){
 						
-						attackPlants.remove(plant.getRow());
+						attackPlants.remove(plant);
+					}
+                     if(plant instanceof Sunflower){
+						
+                    	 sunFlower.remove(plant);
 					}
 				}
 			});
@@ -111,7 +138,7 @@ public class Fightline {
 			if(zoombies.size()>0 && plants.size()>0){
 				  for(Zombies zombies:zoombies){
 					  CGPoint position = zombies.getPosition();
-					int row=  (int) (position.x/50-1);
+					int row=  (int) (position.x/44-1);
 					Plant plant = plants.get(row);
 					if(plant!=null){
 						zombies.attack(plant);

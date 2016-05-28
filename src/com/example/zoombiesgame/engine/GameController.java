@@ -18,6 +18,8 @@ import com.example.zoombiesgame.base.Plant;
 import com.example.zoombiesgame.bean.Nut;
 import com.example.zoombiesgame.bean.PrimaryZoombies;
 import com.example.zoombiesgame.bean.ShowPlant;
+import com.example.zoombiesgame.bean.Sunflower;
+import com.example.zoombiesgame.bean.SuperPeasePlant;
 import com.example.zoombiesgame.bean.peasePlant;
 import com.example.zoombiesgame.uilts.CommonUilts;
 
@@ -50,7 +52,7 @@ public class GameController {
 	}
 	private static GameController controller=new GameController();
 
-	private List<CGPoint> roadPoint;
+	public List<CGPoint> roadPoint;
 	
 	
 	//得到一个实例
@@ -119,13 +121,11 @@ public class GameController {
  	
  	//游戏开始后 处理点击事件
 	public void handleTouch(CGPoint point) {
-		System.out.println("坚果11111111");
 		CCSprite chose=(CCSprite) map.getParent().
 				getChildByTag(fightLayer.TAG_CHOSE);
 		
 		CGRect choseBox = chose.getBoundingBox();
 		if(CGRect.containsPoint(choseBox, point)){
-			System.out.println("坚23");
 			if(clickedPlant!=null){
 				 clickedPlant.getPlant().setOpacity(255);
 				 clickedPlant=null;
@@ -137,7 +137,6 @@ public class GameController {
 					
 					//植物被选中
 					 clickedPlant=plant;
-						System.out.println("坚果43124123");
 					 clickedPlant.getPlant().setOpacity(150);
 					 int id = clickedPlant.getId();
 					 
@@ -145,10 +144,15 @@ public class GameController {
 					 case 1:
 							beReadyToInstalled=new peasePlant();
 						  	break;
+					 case 2:beReadyToInstalled=new Sunflower();
+					  	break;
 					case 4:
 						beReadyToInstalled=new Nut();
 					  	break;
 
+					case 8:
+						beReadyToInstalled=new SuperPeasePlant();
+					  	break;
 					default:
 						break;
 					}
@@ -158,7 +162,6 @@ public class GameController {
 			
 			//安放植物
 			if(clickedPlant!=null){
-				System.out.println("坚果1");
 				/**
 				 * 获得横竖的长度范围
 				 */
@@ -171,7 +174,6 @@ public class GameController {
 				if (row >= 0 && row <= 8 && line >= 0 && line <= 4) {
 
 					// 安放植物
-					System.out.println("坚果大大大大");
 					beReadyToInstalled.setLine(line);// 设置植物的行号
 					beReadyToInstalled.setRow(row); // 设置植物的列号
 

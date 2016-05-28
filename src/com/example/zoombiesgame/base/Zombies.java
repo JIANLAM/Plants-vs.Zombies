@@ -13,7 +13,7 @@ import android.widget.Button;
  */
 public abstract class Zombies extends BaseElement {
 
-	protected int life = 50;// 生命
+	protected int life = 60;// 生命
 	protected int attack = 5;// 攻击力
 	protected int speed = 20;// 移动速度
 

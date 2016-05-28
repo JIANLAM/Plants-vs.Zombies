@@ -1,4 +1,10 @@
 package com.example.zoombiesgame.base;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import com.example.zoombiesgame.bean.SunShine;
+
 /**
  * 生产型植物
  * @author Administrator
@@ -6,6 +12,9 @@ package com.example.zoombiesgame.base;
  */
 public abstract class ProductPlant extends Plant {
 
+	
+	// 阳光集合
+	protected List<SunShine> sunShine = new CopyOnWriteArrayList<SunShine>();
 	public ProductPlant(String filepath) {
 		super(filepath);
 	}

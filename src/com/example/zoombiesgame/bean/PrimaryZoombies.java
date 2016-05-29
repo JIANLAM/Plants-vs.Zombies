@@ -3,6 +3,7 @@ package com.example.zoombiesgame.bean;
 import org.cocos2d.actions.CCScheduler;
 import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.actions.instant.CCCallFunc;
+import org.cocos2d.actions.interval.CCAnimate;
 import org.cocos2d.actions.interval.CCMoveTo;
 import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.nodes.CCAnimation;
@@ -89,7 +90,16 @@ public class PrimaryZoombies extends Zombies {
 
 		 life-=attack;
 		 if(life==0){
-			   destroy();
+			 
+			 //切换到死亡动画模式
+			 stopAllActions();
+			 CCAction animateOfdrophead = CommonUilts.getAnimate("image/zombies/zombies_1/head/z_1_head_%02d.png", 
+					 6, false);
+			 CCAction animateOfdie = CommonUilts.getAnimate("image/zombies/zombies_1/die/z_1_die_%02d.png", 
+					 6, false);
+			CCSequence sequence=CCSequence.actions((CCAnimate)animateOfdrophead,(CCAnimate)animateOfdie
+					,CCCallFunc.action(this, "destroy"));
+			 this.runAction(sequence);
 		 }
 	}
 

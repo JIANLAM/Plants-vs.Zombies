@@ -7,11 +7,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cocos2d.actions.CCProgressTimer;
 import org.cocos2d.actions.CCScheduler;
+import org.cocos2d.actions.base.CCAction;
+import org.cocos2d.actions.instant.CCCallFunc;
+import org.cocos2d.actions.interval.CCAnimate;
+import org.cocos2d.actions.interval.CCDelayTime;
+import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.layers.CCTMXTiledMap;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
+import org.cocos2d.types.CGSize;
 
 import com.example.zoombiesgame.Layer.fightLayer;
 import com.example.zoombiesgame.base.Plant;
@@ -106,8 +112,33 @@ public class GameController {
 		//添加到行战场
 		lines.get(lineNum).addZoombies(zoombies);
 		progress+=5;
+		 
 		progressTimer.setPercentage(progress);//设置新的进度
+		
+		//显示最后一波动画
+		  if(progress==60){
+			  CGSize winSize = CCDirector.sharedDirector().winSize();
+			  finalWave = CCSprite.sprite("image/fight/finalWave/FinalWave_01.png");
+			  finalWave .setPosition(winSize.width/2,winSize.height/2);
+			  map.addChild(finalWave);
+			  
+			  //序列帧动画
+			  CCAction animate = CommonUilts.getAnimate("image/fight/finalWave/FinalWave_%02d.png",
+					  2, false);
+			  CCDelayTime delayTime=CCDelayTime.action(1.5f);
+			  CCSequence sequence=CCSequence.actions((CCAnimate)animate,delayTime, CCCallFunc.action(this,
+					  "Hide"));
+			  
+			  finalWave.runAction(sequence);
+		  }
 	} 
+	
+	
+	//隐藏最后一波的动画
+	public void Hide(){
+		 
+		  finalWave.setVisible(false);
+	}
 	
 	public void GameOver(){
 		isStart=false;
@@ -197,6 +228,8 @@ public class GameController {
 
 	CCProgressTimer progressTimer;
 	int  progress=0;
+
+	private CCSprite finalWave;
 	private void progress() {
 		// 创建了进度条
 		progressTimer = CCProgressTimer.progressWithFile("image/fight/progress.png");

@@ -12,6 +12,7 @@ import org.cocos2d.actions.instant.CCCallFunc;
 import org.cocos2d.actions.interval.CCAnimate;
 import org.cocos2d.actions.interval.CCDelayTime;
 import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCTMXTiledMap;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCSprite;
@@ -19,8 +20,12 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 
+import com.example.zoombiesgame.Layer.PlantWin;
+import com.example.zoombiesgame.Layer.ZombiesWin;
+import com.example.zoombiesgame.Layer.WellcomLayer;
 import com.example.zoombiesgame.Layer.fightLayer;
 import com.example.zoombiesgame.base.Plant;
+import com.example.zoombiesgame.base.Zombies;
 import com.example.zoombiesgame.bean.Nut;
 import com.example.zoombiesgame.bean.PrimaryZoombies;
 import com.example.zoombiesgame.bean.ShowPlant;
@@ -41,9 +46,15 @@ public class GameController {
 
 	 public static boolean isStart;
 	 
+	 //设定僵尸的总体数量
+//	  private  int TOTAL_ZOMBIES=15;
 	private CCTMXTiledMap map;
 	private List<ShowPlant> selectedPlant;
-	public GameController() {
+	
+	//创造僵尸集合
+	 private List<Zombies> allZoombies=new ArrayList<Zombies>();
+
+	 public GameController() {
 	}
 	
 	//控制5行的逻辑
@@ -68,21 +79,38 @@ public class GameController {
 		return controller;
 		 
 	}
-	
+    //开始游戏
 	public void startGame(CCTMXTiledMap map, List<ShowPlant> selectedPlant){
 		isStart=true;
-		this.map=map;
-		this.selectedPlant=selectedPlant;
-		//解析道路
-		loadMap();
-	  /*
-	   * 安放僵尸
-	   * 定时器
-	   * be carefull：函数要添加时间 参数4：是否暂停
-	   */
-		CCScheduler.sharedScheduler().schedule("addZoombies", this, 2, false);
-		 progress();
+			this.map=map;
+			this.selectedPlant=selectedPlant;
+			//解析道路
+			loadMap();
+		  /*
+		   * 安放僵尸
+		   * 定时器
+		   * be carefull：函数要添加时间 参数4：是否暂停
+		   */
+			CCScheduler.sharedScheduler().schedule("addZoombies", this, 5, false);
+			 progress();
+	 
+	 
 	}
+	
+	//游戏结束
+	public void GameOver(){
+		isStart=false;
+		
+//	    CCSprite endGame=CCSprite.sprite("image/fight/ZombiesWon.jpg");
+//		  endGame.setAnchorPoint(0,0);
+//		  endGame.setScale(2f);
+////		endGame.setPosition(winSize.width/2,winSize.height/2);
+//	     map.addChild(endGame,3);
+//		  CCDirector.sharedDirector().pause();
+		
+		CommonUilts.changLayer(new PlantWin(), 1);
+		    
+;	 }
 	
 	//记录安放植物的点
 	CGPoint[][] towers = new CGPoint[5][9];
@@ -106,18 +134,29 @@ public class GameController {
 		//行号
 		int lineNum = random.nextInt(5);
 		
-		PrimaryZoombies zoombies=new PrimaryZoombies(roadPoint.get(lineNum*2),
-				roadPoint.get(lineNum*2+1));
-		map.addChild(zoombies,1);
-		//添加到行战场
-		lines.get(lineNum).addZoombies(zoombies);
+		//得到所有僵尸的集合
+		if(allZoombies.size()<=15){
+			zoombies = new PrimaryZoombies(roadPoint.get(lineNum*2),
+					roadPoint.get(lineNum*2+1));
+			map.addChild(zoombies,1);
+			//添加到行战场
+			lines.get(lineNum).addZoombies(zoombies); 
+			 	allZoombies.add(zoombies);
+			 	 
+			  if( lines.get(lineNum).numOfDeath==15){
+				    GameOver();
+			  }
+			
+			  
+		}
+		 
 		progress+=5;
 		 
 		progressTimer.setPercentage(progress);//设置新的进度
 		
 		//显示最后一波动画
 		  if(progress==60){
-			  CGSize winSize = CCDirector.sharedDirector().winSize();
+			  winSize = CCDirector.sharedDirector().winSize();
 			  finalWave = CCSprite.sprite("image/fight/finalWave/FinalWave_01.png");
 			  finalWave .setPosition(winSize.width/2,winSize.height/2);
 			  map.addChild(finalWave);
@@ -140,9 +179,7 @@ public class GameController {
 		  finalWave.setVisible(false);
 	}
 	
-	public void GameOver(){
-		isStart=false;
-	}
+	
 
 	private ShowPlant clickedPlant;
 	
@@ -230,6 +267,12 @@ public class GameController {
 	int  progress=0;
 
 	private CCSprite finalWave;
+
+	private CGSize winSize;
+
+	private  int num;
+
+	private PrimaryZoombies zoombies;
 	private void progress() {
 		// 创建了进度条
 		progressTimer = CCProgressTimer.progressWithFile("image/fight/progress.png");

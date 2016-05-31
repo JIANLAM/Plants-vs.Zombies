@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.cocos2d.actions.CCScheduler;
 import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.types.CGPoint;
 
 import com.example.zoombiesgame.base.BaseElement.DieListener;
@@ -78,17 +80,32 @@ public class Fightline {
 		
 		   
 	 }
+	 //死亡僵尸数
+		public  static int numOfDeath=0;
+ 
 	 //添加僵尸
 	 public void addZoombies(final Zombies mZoombies){
 		 zoombies.add(mZoombies);
+		
 		 mZoombies.setDieListener(new DieListener() {
 			
-			public void die() {;
+			public void die() {
+				++numOfDeath;
 				zoombies.remove(mZoombies);
+			 
 			}
 		});
+ 
 	 }
 	 
+//	 
+//	 public void isOver(){
+//		 System.out.println("游戏结束了！");
+//		 if(DieZoombies.size()==15){
+//			 System.out.println("游戏结束了！");
+//		 }
+//		   
+//	 }
 	    /**
 		 * 判断该列上 是否有植物
 		 * 

@@ -40,7 +40,7 @@ public class MenuLayer extends BaseLayer {
 	 */
 	 
 	 public void click(Object object){
-		   CommonUilts.changLayer(new fightLayer());
+		   CommonUilts.changLayer(new fightLayer(),0);
 		   
 		   System.out.println("l am ok");
 	 }

@@ -7,9 +7,13 @@ import org.cocos2d.actions.interval.CCAnimate;
 import org.cocos2d.actions.interval.CCMoveTo;
 import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.nodes.CCAnimation;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.types.util.CGPointUtil;
 
+import com.example.zoombiesgame.Layer.ZombiesWin;
 import com.example.zoombiesgame.base.BaseElement;
 import com.example.zoombiesgame.base.Plant;
 import com.example.zoombiesgame.base.Zombies;
@@ -17,6 +21,7 @@ import com.example.zoombiesgame.uilts.CommonUilts;
 
 public class PrimaryZoombies extends Zombies {
 
+	
 	public PrimaryZoombies(CGPoint startPoint,CGPoint endPoint) {
 		super("image/zombies/zombies_1/walk/z_1_01.png");
 		this.startPoint = startPoint;
@@ -36,14 +41,22 @@ public class PrimaryZoombies extends Zombies {
          float t=CGPointUtil.distance(getPosition(), endPoint)/speed;
          CCMoveTo moveTo=CCMoveTo.action(t, endPoint);
          CCSequence sequence=CCSequence.actions(moveTo, 
-        		 CCCallFunc.action(this, "gameOver"));
+        		 CCCallFunc.action(this, "zombiesWin"));
          this.runAction(sequence);
+         
+        
          
 	}
 
 	//游戏结束
-	public void gameOver(){
-		this.destroy();
+	public void zombiesWin(){
+		
+	   //判断僵尸是否已经走到房子内
+         
+         	
+     		CommonUilts.changLayer(new ZombiesWin(),1);
+     		this.destroy();
+       
 	}
 	
 	Plant targePlant;
@@ -89,7 +102,7 @@ public class PrimaryZoombies extends Zombies {
 	public void attacked(int attack) {
 
 		 life-=attack;
-		 if(life==0){
+		 if(life<=0){
 			 
 			 //切换到死亡动画模式
 			 stopAllActions();
@@ -100,6 +113,7 @@ public class PrimaryZoombies extends Zombies {
 			CCSequence sequence=CCSequence.actions((CCAnimate)animateOfdrophead,(CCAnimate)animateOfdie
 					,CCCallFunc.action(this, "destroy"));
 			 this.runAction(sequence);
+		 
 		 }
 	}
 

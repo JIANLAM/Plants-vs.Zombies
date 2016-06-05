@@ -278,17 +278,20 @@ public void prologue(){
 	  String format="image/fight/startready_%02d.png";
 	CCAction animate = CommonUilts.getAnimate(format, 3, false);
 	CCSequence sequence=CCSequence.actions((CCAnimate)animate, CCCallFunc.action(this,
-			"startGame"));
+			"controlGame"));
 	mprologue.runAction(sequence);
 }
 
-//开始游戏
-public void startGame(){
+
+public void controlGame(){
 	mprologue.removeSelf();
 	
 	//转到游戏控制器上
 	GameController controller=GameController.getInstance();
+	
+	//开始游戏
 	controller.startGame(map,selectedPlant);
+  
 }
 public void unlock() {
   lock=false;

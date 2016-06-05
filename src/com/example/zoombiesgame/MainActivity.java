@@ -13,8 +13,7 @@ import android.view.Menu;
 
 public class MainActivity extends Activity {
 
-       //add  the function about sunflower
-       //在dev上的修改
+       
 	private CCDirector director;
 
 	@Override
@@ -32,7 +31,7 @@ public class MainActivity extends Activity {
 	  
 		CCScene  Scene=CCScene.node();
 		
-		Scene.addChild(new fightLayer());
+		Scene.addChild(new WellcomLayer());
 		director.runWithScene(Scene);
 		
 	}

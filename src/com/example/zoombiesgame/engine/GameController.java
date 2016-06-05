@@ -7,17 +7,31 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cocos2d.actions.CCProgressTimer;
 import org.cocos2d.actions.CCScheduler;
+import org.cocos2d.actions.base.CCAction;
+import org.cocos2d.actions.instant.CCCallFunc;
+import org.cocos2d.actions.interval.CCAnimate;
+import org.cocos2d.actions.interval.CCDelayTime;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCTMXTiledMap;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
+import org.cocos2d.types.CGSize;
 
+import com.example.zoombiesgame.Layer.PlantWin;
+import com.example.zoombiesgame.Layer.ZombiesWin;
+import com.example.zoombiesgame.Layer.WellcomLayer;
 import com.example.zoombiesgame.Layer.fightLayer;
 import com.example.zoombiesgame.base.Plant;
+import com.example.zoombiesgame.base.Zombies;
 import com.example.zoombiesgame.bean.Nut;
+import com.example.zoombiesgame.bean.PotatoPlant;
 import com.example.zoombiesgame.bean.PrimaryZoombies;
 import com.example.zoombiesgame.bean.ShowPlant;
+import com.example.zoombiesgame.bean.Sunflower;
+import com.example.zoombiesgame.bean.SuperPeasePlant;
 import com.example.zoombiesgame.bean.peasePlant;
 import com.example.zoombiesgame.uilts.CommonUilts;
 
@@ -33,9 +47,15 @@ public class GameController {
 
 	 public static boolean isStart;
 	 
+	 //设定僵尸的总体数量
+//	  private  int TOTAL_ZOMBIES=15;
 	private CCTMXTiledMap map;
 	private List<ShowPlant> selectedPlant;
-	public GameController() {
+	
+	//创造僵尸集合
+	 private List<Zombies> allZoombies=new ArrayList<Zombies>();
+
+	 public GameController() {
 	}
 	
 	//控制5行的逻辑
@@ -50,7 +70,7 @@ public class GameController {
 	}
 	private static GameController controller=new GameController();
 
-	private List<CGPoint> roadPoint;
+	public List<CGPoint> roadPoint;
 	
 	
 	//得到一个实例
@@ -60,21 +80,38 @@ public class GameController {
 		return controller;
 		 
 	}
-	
+    //开始游戏
 	public void startGame(CCTMXTiledMap map, List<ShowPlant> selectedPlant){
 		isStart=true;
-		this.map=map;
-		this.selectedPlant=selectedPlant;
-		//解析道路
-		loadMap();
-	  /*
-	   * 安放僵尸
-	   * 定时器
-	   * be carefull：函数要添加时间 参数4：是否暂停
-	   */
-		CCScheduler.sharedScheduler().schedule("addZoombies", this, 2, false);
-		 progress();
+			this.map=map;
+			this.selectedPlant=selectedPlant;
+			//解析道路
+			loadMap();
+		  /*
+		   * 安放僵尸
+		   * 定时器
+		   * be carefull：函数要添加时间 参数4：是否暂停
+		   */
+			CCScheduler.sharedScheduler().schedule("addZoombies", this, 5, false);
+			 progress();
+	 
+	 
 	}
+	
+	//游戏结束
+	public void GameOver(){
+		isStart=false;
+		
+//	    CCSprite endGame=CCSprite.sprite("image/fight/ZombiesWon.jpg");
+//		  endGame.setAnchorPoint(0,0);
+//		  endGame.setScale(2f);
+////		endGame.setPosition(winSize.width/2,winSize.height/2);
+//	     map.addChild(endGame,3);
+//		  CCDirector.sharedDirector().pause();
+		
+		CommonUilts.changLayer(new PlantWin(), 1);
+		    
+;	 }
 	
 	//记录安放植物的点
 	CGPoint[][] towers = new CGPoint[5][9];
@@ -98,18 +135,52 @@ public class GameController {
 		//行号
 		int lineNum = random.nextInt(5);
 		
-		PrimaryZoombies zoombies=new PrimaryZoombies(roadPoint.get(lineNum*2),
-				roadPoint.get(lineNum*2+1));
-		map.addChild(zoombies,1);
-		//添加到行战场
-		lines.get(lineNum).addZoombies(zoombies);
+		//得到所有僵尸的集合
+		if(allZoombies.size()<=15){
+			zoombies = new PrimaryZoombies(roadPoint.get(lineNum*2),
+					roadPoint.get(lineNum*2+1));
+			map.addChild(zoombies,1);
+			//添加到行战场
+			lines.get(lineNum).addZoombies(zoombies); 
+			 	allZoombies.add(zoombies);
+			 	 
+			  if( lines.get(lineNum).numOfDeath==15){
+				    GameOver();
+			  }
+			
+			  
+		}
+		 
 		progress+=5;
+		 
 		progressTimer.setPercentage(progress);//设置新的进度
+		
+		//显示最后一波动画
+		  if(progress==60){
+			  winSize = CCDirector.sharedDirector().winSize();
+			  finalWave = CCSprite.sprite("image/fight/finalWave/FinalWave_01.png");
+			  finalWave .setPosition(winSize.width/2,winSize.height/2);
+			  map.addChild(finalWave);
+			  
+			  //序列帧动画
+			  CCAction animate = CommonUilts.getAnimate("image/fight/finalWave/FinalWave_%02d.png",
+					  2, false);
+			  CCDelayTime delayTime=CCDelayTime.action(1.5f);
+			  CCSequence sequence=CCSequence.actions((CCAnimate)animate,delayTime, CCCallFunc.action(this,
+					  "Hide"));
+			  
+			  finalWave.runAction(sequence);
+		  }
 	} 
 	
-	public void GameOver(){
-		isStart=false;
+	
+	//隐藏最后一波的动画
+	public void Hide(){
+		 
+		  finalWave.setVisible(false);
 	}
+	
+	
 
 	private ShowPlant clickedPlant;
 	
@@ -119,13 +190,11 @@ public class GameController {
  	
  	//游戏开始后 处理点击事件
 	public void handleTouch(CGPoint point) {
-		System.out.println("坚果11111111");
 		CCSprite chose=(CCSprite) map.getParent().
 				getChildByTag(fightLayer.TAG_CHOSE);
 		
 		CGRect choseBox = chose.getBoundingBox();
 		if(CGRect.containsPoint(choseBox, point)){
-			System.out.println("坚23");
 			if(clickedPlant!=null){
 				 clickedPlant.getPlant().setOpacity(255);
 				 clickedPlant=null;
@@ -137,7 +206,6 @@ public class GameController {
 					
 					//植物被选中
 					 clickedPlant=plant;
-						System.out.println("坚果43124123");
 					 clickedPlant.getPlant().setOpacity(150);
 					 int id = clickedPlant.getId();
 					 
@@ -145,10 +213,17 @@ public class GameController {
 					 case 1:
 							beReadyToInstalled=new peasePlant();
 						  	break;
+					 case 2:beReadyToInstalled=new Sunflower();
+					  	break;
 					case 4:
 						beReadyToInstalled=new Nut();
 					  	break;
-
+					case 5:
+						beReadyToInstalled=new PotatoPlant();
+					  	break;
+					case 8:
+						beReadyToInstalled=new SuperPeasePlant();
+					  	break;
 					default:
 						break;
 					}
@@ -158,7 +233,6 @@ public class GameController {
 			
 			//安放植物
 			if(clickedPlant!=null){
-				System.out.println("坚果1");
 				/**
 				 * 获得横竖的长度范围
 				 */
@@ -171,7 +245,6 @@ public class GameController {
 				if (row >= 0 && row <= 8 && line >= 0 && line <= 4) {
 
 					// 安放植物
-					System.out.println("坚果大大大大");
 					beReadyToInstalled.setLine(line);// 设置植物的行号
 					beReadyToInstalled.setRow(row); // 设置植物的列号
 
@@ -180,9 +253,7 @@ public class GameController {
 				     if(!lines.contains(row)){
 				    		lines.get(line).addPlant(beReadyToInstalled);
 							map.addChild(beReadyToInstalled);
-						 
-				    	 
-				     }
+					   }
 				
 					}
 				beReadyToInstalled=null;
@@ -197,6 +268,14 @@ public class GameController {
 
 	CCProgressTimer progressTimer;
 	int  progress=0;
+
+	private CCSprite finalWave;
+
+	private CGSize winSize;
+
+	private  int num;
+
+	private PrimaryZoombies zoombies;
 	private void progress() {
 		// 创建了进度条
 		progressTimer = CCProgressTimer.progressWithFile("image/fight/progress.png");

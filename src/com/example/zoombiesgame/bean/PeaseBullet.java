@@ -12,6 +12,8 @@ import org.cocos2d.types.util.CGPointUtil;
 import com.example.zoombiesgame.base.Bullet;
 import com.example.zoombiesgame.uilts.CommonUilts;
 
+
+//植物的子弹类
 public class PeaseBullet extends Bullet {
 
 	public PeaseBullet( ) {
@@ -20,15 +22,16 @@ public class PeaseBullet extends Bullet {
 	}
 
 	public void move() {
-      CGPoint position = getPosition();
-      CGPoint targetPosition=CCNode.ccp(CCDirector.sharedDirector().winSize().width
-    		  , 0);
-      float t = CGPointUtil.distance(position, targetPosition)/speed;
-      CCMoveBy moveBy=CCMoveBy.action(t, targetPosition);
-      CCSequence sequence=CCSequence.actions(moveBy, 
-    		  CCCallFunc.action(this, "destory"));
-      this.runAction(sequence);
-      
+		//获取到当前子弹的坐标
+		CGPoint position = getPosition();
+		CGPoint targetPostion=CCNode.ccp(CCDirector.sharedDirector().winSize().width, position.y);
+		float t=CGPointUtil.distance(position, targetPostion)/speed;
+		CCMoveTo moveTo=CCMoveTo.action(t, targetPostion);
+		CCSequence sequence=CCSequence.actions(moveTo, CCCallFunc.action(this, "destroy"));
+		
+		this.runAction(sequence);
+		
 	}
 
+ 
 }

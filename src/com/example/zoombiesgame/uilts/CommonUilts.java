@@ -17,23 +17,54 @@ import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.nodes.CCSpriteFrame;
 import org.cocos2d.opengl.CCGLSurfaceView;
+import org.cocos2d.transitions.CCFadeDownTransition;
+import org.cocos2d.transitions.CCFadeTRTransition;
 import org.cocos2d.transitions.CCFlipXTransition;
+import org.cocos2d.transitions.CCJumpZoomTransition;
 import org.cocos2d.types.CGPoint;
 
 import android.R.string;
 
 public class CommonUilts {
 
-	
+	/*
+	 * 选择场景切换特效的常量
+	 */
+	//水平切换
+	public static final int FLIPX_TANSITION=0;
+	//跳跃切换
+	public static final int JUMP_TANSITION=1;
+	//淡出
+	public static final int FADE_TANSITION=2;
 	//改变画面
-	public static void changLayer(CCLayer newlayer) {
+	public static void changLayer(CCLayer newlayer,int i) {
 		
 		
 		CCScene Scene=CCScene.node();
 		Scene.addChild(newlayer);
-	 CCFlipXTransition  Transition=
-			 CCFlipXTransition.transition(2, Scene, 1);
-		CCDirector.sharedDirector().replaceScene( Transition);
+	 
+	 
+		switch (i) {
+				case FLIPX_TANSITION:
+					CCFlipXTransition  XTransition=
+					 CCFlipXTransition.transition(2, Scene, 1);
+					CCDirector.sharedDirector().replaceScene( XTransition);
+					break;
+				case JUMP_TANSITION:
+					CCJumpZoomTransition  JTransition=
+							CCJumpZoomTransition.transition(2f, Scene);
+					CCDirector.sharedDirector().replaceScene( JTransition);
+					break;
+				case FADE_TANSITION:
+					CCFadeTRTransition  FTransition=
+							CCFadeDownTransition.transition(2f, Scene);
+					CCDirector.sharedDirector().replaceScene( FTransition);
+					break;
+				 
+				default:
+					break;
+				}
+		
 	}
 	
 	//解析地图

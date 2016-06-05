@@ -221,7 +221,7 @@ public boolean ccTouchesBegan(MotionEvent event) {
 		    	    			ccp(70+selectedPlant.size()*53,255));
 		    	    	
 		    	    	CCSequence sequence=CCSequence.actions(moveTO,
-		    	    			CCCallFunc.action(this, "unlock"));
+								CCCallFunc.action(this, "unlock"));
 		    	    	plant.getPlant().runAction(sequence);
 		    	    	selectedPlant.add(plant);
 //		    	    	int size = selectedPlant.size();
@@ -278,17 +278,20 @@ public void prologue(){
 	  String format="image/fight/startready_%02d.png";
 	CCAction animate = CommonUilts.getAnimate(format, 3, false);
 	CCSequence sequence=CCSequence.actions((CCAnimate)animate, CCCallFunc.action(this,
-			"startGame"));
+			"controlGame"));
 	mprologue.runAction(sequence);
 }
 
-//开始游戏
-public void startGame(){
+
+public void controlGame(){
 	mprologue.removeSelf();
 	
 	//转到游戏控制器上
 	GameController controller=GameController.getInstance();
+	
+	//开始游戏
 	controller.startGame(map,selectedPlant);
+  
 }
 public void unlock() {
   lock=false;

@@ -65,7 +65,7 @@ public boolean ccTouchesBegan(MotionEvent event) {
 	CGRect boundingBox = start.getBoundingBox();
 	  if(CGRect.containsPoint(boundingBox, convertTouchToNodeSpace)){ 
 		  
-		  CommonUilts.changLayer(new MenuLayer());
+		  CommonUilts.changLayer(new MenuLayer(),0);
 	  }
 	return super.ccTouchesBegan(event);
 }

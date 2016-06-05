@@ -6,6 +6,7 @@ import org.cocos2d.nodes.CCNode;
 import com.example.zoombiesgame.base.AttackPlant;
 import com.example.zoombiesgame.base.Bullet;
 import com.example.zoombiesgame.uilts.CommonUilts;
+ 
 
 public class peasePlant extends AttackPlant {
 
@@ -16,21 +17,20 @@ public class peasePlant extends AttackPlant {
 
 	@Override
 	public Bullet createBullet() {
-		if(bullets.size()<1){
-			final PeaseBullet bullet=new PeaseBullet();
-			bullet.setPosition(CCNode.ccp(this.getPosition().x+20,
-					this.getPosition().y+40));
-			this.getParent().addChild(bullet);
-			
-			this.setDieListener(new DieListener() {
+		if(bullets.size()<1){// 证明之前没有创建子弹 
+			final PeaseBullet pease=new PeaseBullet();
+			pease.setPosition(CCNode.ccp(this.getPosition().x+20, this.getPosition().y+40));
+			this.getParent().addChild(pease);
+			pease.setDieListener(new DieListener() {
 				
 				@Override
 				public void die() {
-					bullets.remove(bullet);
+					 bullets.remove(pease);
 				}
 			});
-			bullets.add(bullet);
-			bullet.move();
+			bullets.add(pease);
+			
+			pease.move();
 		}
 		return null;
 	}
